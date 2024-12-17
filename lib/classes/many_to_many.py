@@ -70,12 +70,16 @@ class Author:
 
     def topic_areas(self):
         categories = list(set([magazine.category for magazine in self.magazines()]))
+
         return categories if len(categories) > 0 else None
 
 class Magazine:
+    all = []
+
     def __init__(self, name, category):
         self.name = name
         self.category = category
+        Magazine.all.append(self)
 
     @property
     def name(self):
@@ -118,3 +122,17 @@ class Magazine:
         contr_authors = list(set([author for author in author_list if author_list.count(author) > 1]))
         
         return contr_authors if len(contr_authors) > 0 else None
+    
+    @classmethod
+    def top_publisher(cls):
+        top_mag = None
+        top_count = 0
+
+        for magazine in cls.all:
+            article_count = len(magazine.articles())
+            
+            if article_count > top_count:
+                top_count = article_count
+                top_mag = magazine
+
+        return top_mag
